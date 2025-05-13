@@ -5,6 +5,7 @@ const DetalleInmueble = () => {
   const { id } = useRouter().query;
   const [inmueble, setInmueble] = useState(null);
   const [editando, setEditando] = useState(false);
+  const [usuarioActual, setUsuarioActual] = useState(null);
 
   useEffect(() => {
     if (id) {
@@ -13,6 +14,22 @@ const DetalleInmueble = () => {
         .then((data) => setInmueble(data));
     }
   }, [id]);
+
+  useEffect(() => {
+    const obtenerUsuario = async () => {
+      try {
+        const res = await fetch("/api/me");
+        if (res.ok) {
+          const data = await res.json();
+          setUsuarioActual(data.user);
+        }
+      } catch (err) {
+        console.error("No autenticado");
+      }
+    };
+
+    obtenerUsuario();
+  }, []);
 
   const handleChange = (e) => {
     const { name, value, type, checked } = e.target;
@@ -23,13 +40,18 @@ const DetalleInmueble = () => {
   };
 
   const guardarCambios = async () => {
-    await fetch(`/api/inmueble/${id}`, {
+    const res = await fetch(`/api/inmueble/${id}`, {
       method: "PUT",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify(inmueble),
     });
-    alert("Cambios guardados");
-    setEditando(false);
+
+    if (res.ok) {
+      alert("Cambios guardados");
+      setEditando(false);
+    } else {
+      alert("No tienes permiso para editar este inmueble");
+    }
   };
 
   if (!inmueble) return <p style={{ textAlign: "center", marginTop: "2rem" }}>Cargando...</p>;
@@ -102,20 +124,45 @@ const DetalleInmueble = () => {
             <p><strong>Estacionamientos:</strong> {inmueble.estacionamientos}</p>
             <p><strong>Amueblado:</strong> {inmueble.amueblado ? "Sí" : "No"}</p>
 
-            <button onClick={() => setEditando(true)} style={{
-              marginTop: "1rem",
-              backgroundColor: "#10B981",
-              color: "white",
-              padding: "10px 20px",
-              borderRadius: "8px",
-              border: "none",
-              cursor: "pointer"
-            }}>Editar</button>
+            <p style={{ marginTop: "1.5rem" }}>
+              <strong>Publicado por:</strong> {inmueble.nombre_usuario}
+            </p>
+
+            <a
+  href={`https://wa.me/52${inmueble.telefono_usuario.replace(/\D/g, '')}?text=${encodeURIComponent("Hola, vi tu propiedad en CRECE y me gustaría recibir más información.")}`}
+  target="_blank"
+  rel="noopener noreferrer"
+  style={{
+    display: "inline-block",
+    marginTop: "0.8rem",
+    backgroundColor: "#25D366",
+    color: "#fff",
+    padding: "0.6rem 1.2rem",
+    fontSize: "0.95rem",
+    borderRadius: "8px",
+    fontWeight: "bold",
+    textDecoration: "none"
+  }}
+>
+  Contactar por WhatsApp
+</a>
+
+
+            {usuarioActual?.id === inmueble.usuario_id && (
+              <button onClick={() => setEditando(true)} style={{
+                marginTop: "1rem",
+                backgroundColor: "#10B981",
+                color: "white",
+                padding: "10px 20px",
+                borderRadius: "8px",
+                border: "none",
+                cursor: "pointer"
+              }}>Editar</button>
+            )}
           </div>
         )}
       </div>
 
-      {/* Imágenes afuera de la tarjeta */}
       {inmueble.imagenes?.length > 0 && (
         <div style={{
           display: "flex",
@@ -147,8 +194,3 @@ const DetalleInmueble = () => {
 };
 
 export default DetalleInmueble;
-
-
-
-
-

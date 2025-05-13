@@ -1,6 +1,6 @@
-// pages/api/inmueble/[id].js
 import sql from "../../../lib/db";
 import { parse } from "cookie";
+import jwt from "jsonwebtoken";
 
 export default async function handler(req, res) {
   const { id } = req.query;
@@ -15,11 +15,14 @@ export default async function handler(req, res) {
           i.antiguedad, i.niveles, i.recamaras,
           i.banos_completos, i.medios_banos, i.estacionamientos,
           i.amueblado, i.usuario_id,
-          ARRAY_AGG(img.url_imagen) AS imagenes
+          ARRAY_AGG(img.url_imagen) AS imagenes,
+          u.nombre AS nombre_usuario,
+          u.telefono AS telefono_usuario
         FROM inmueble i
         LEFT JOIN imagenes img ON i.id = img.inmueble_id
+        LEFT JOIN usuario u ON i.usuario_id = u.id
         WHERE i.id = ${id}
-        GROUP BY i.id
+        GROUP BY i.id, u.nombre, u.telefono
       `;
 
       if (rows.length === 0) {
@@ -37,15 +40,20 @@ export default async function handler(req, res) {
     try {
       const cookies = parse(req.headers.cookie || '');
       const sessionToken = cookies.session_token;
-      if (!sessionToken) return res.status(401).json({ message: "No autenticado" });
 
-      const user = JSON.parse(sessionToken);
-      const userId = user.id;
+      if (!sessionToken) {
+        return res.status(401).json({ message: "No autenticado" });
+      }
 
-      // Validar que el inmueble pertenece al usuario
+      // ✅ Verificar el JWT y extraer el userId
+      const decoded = jwt.verify(sessionToken, process.env.JWT_SECRET);
+      const userId = decoded.id;
+
+      // Verificar propiedad del inmueble
       const [ownerCheck] = await sql`
         SELECT usuario_id FROM inmueble WHERE id = ${id}
       `;
+
       if (!ownerCheck || ownerCheck.usuario_id !== userId) {
         return res.status(403).json({ message: "No tienes permiso para modificar este inmueble" });
       }
@@ -82,8 +90,8 @@ export default async function handler(req, res) {
       res.status(200).json({ message: "Inmueble actualizado" });
 
     } catch (error) {
-      console.error(error);
-      res.status(500).json({ message: "Error al actualizar el inmueble" });
+      console.error("Error al actualizar inmueble:", error.message);
+      return res.status(500).json({ message: "Error al actualizar el inmueble" });
     }
   }
 
@@ -91,5 +99,6 @@ export default async function handler(req, res) {
     res.status(405).end("Método no permitido");
   }
 }
+
 
 

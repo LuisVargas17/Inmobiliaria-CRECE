@@ -1,22 +1,48 @@
 import Link from 'next/link';
+import { useRouter } from 'next/router';
+import styles from '../styles/navbar.module.css';
 
 export default function Navbar() {
+  const router = useRouter();
+
+  const handleEntrarClick = async () => {
+    try {
+      const res = await fetch("/api/validate-session");
+      const data = await res.json();
+
+      if (res.ok && data.authenticated) {
+        router.push("/usuario");
+      } else {
+        router.push("/login");
+      }
+    } catch (error) {
+      console.error("Error al validar sesión:", error);
+      router.push("/login");
+    }
+  };
+
   return (
-    <nav>
-      <div className="logo">
+    <nav className={styles.navbar}>
+      <div className={styles.logo}>
         <Link href="/">
-        <img src="/images/logo.png" alt="CRECE Logo" />
+          <img src="/images/logo.png" alt="CRECE Logo" />
         </Link>
       </div>
-      <ul>
+
+      <ul className={styles.navList}>
         <li><Link href="/">Inicio</Link></li>
-        <li><Link href="/contactanos">Contactanos</Link></li>
+        <li><Link href="/contactanos">Contáctanos</Link></li>
       </ul>
-      <div className="login-button">
-        <Link href="/login"><button>Entrar</button></Link>
+
+      <div className={styles.loginButton}>
+        <button className={styles.indexButton} onClick={handleEntrarClick}>
+          Entrar
+        </button>
       </div>
     </nav>
   );
 }
+
+
 
 

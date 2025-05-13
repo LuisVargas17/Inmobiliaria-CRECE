@@ -1,30 +1,15 @@
 import { useState, useEffect } from "react";
 import { useRouter } from "next/router";
+import styles from "../styles/publicarInmueble.module.css";
 
 const FormularioInmueble = () => {
   const [formData, setFormData] = useState({
-    titulo: "",
-    descripcion: "",
-    precio: "",
-    direccion: "",
-    ciudad: "",
-    codigo_postal: "",
-    tipo_inmueble: "",
-    estatus: "",
-    superficie_terreno: "",
-    superficie_construida: "",
-    antiguedad: "",
-    niveles: "",
-    recamaras: "",
-    banos_completos: "",
-    medios_banos: "",
-    estacionamientos: "",
-    amueblado: false,
-    cocina_integral: false,
-    closets: false,
-    aire_acondicionado: false,
-    cisterna: false,
-    vigilancia: false,
+    titulo: "", descripcion: "", precio: "", direccion: "", ciudad: "",
+    codigo_postal: "", tipo_inmueble: "", estatus: "", superficie_terreno: "",
+    superficie_construida: "", antiguedad: "", niveles: "", recamaras: "",
+    banos_completos: "", medios_banos: "", estacionamientos: "",
+    amueblado: false, cocina_integral: false, closets: false,
+    aire_acondicionado: false, cisterna: false, vigilancia: false
   });
 
   const [imagenes, setImagenes] = useState(null);
@@ -34,28 +19,19 @@ const FormularioInmueble = () => {
 
   useEffect(() => {
     const fetchUser = async () => {
-      try {
-        const res = await fetch("/api/me");
-        if (!res.ok) throw new Error("No autenticado");
-        const data = await res.json();
-        setUsuarioId(data.user.id);
-      } catch (error) {
-        console.error("Error obteniendo usuario:", error);
-        router.push("/login");
-      }
+      const res = await fetch("/api/me");
+      if (!res.ok) return router.replace("/login");
+      const data = await res.json();
+      setUsuarioId(data.user.id);
     };
-    fetchUser();
+    if (typeof window !== "undefined") fetchUser();
   }, []);
 
   useEffect(() => {
     const fetchTipos = async () => {
-      try {
-        const res = await fetch("/api/tipos-inmueble");
-        const data = await res.json();
-        setTiposInmueble(data);
-      } catch (error) {
-        console.error("Error cargando tipos de inmueble:", error);
-      }
+      const res = await fetch("/api/tipos-inmueble");
+      const data = await res.json();
+      setTiposInmueble(data);
     };
     fetchTipos();
   }, []);
@@ -77,123 +53,50 @@ const FormularioInmueble = () => {
     data.append("usuario_id", usuarioId);
     if (imagenes) Array.from(imagenes).forEach((img) => data.append("imagenes", img));
 
-    try {
-      const res = await fetch("/api/inmueble", {
-        method: "POST",
-        body: data,
-      });
-      if (res.ok) router.push("/ver-inmueble");
-      else alert("Error al guardar el inmueble");
-    } catch (error) {
-      console.error("Error enviando formulario:", error);
-      alert("Ocurrió un error inesperado.");
-    }
+    const res = await fetch("/api/inmueble", { method: "POST", body: data });
+    if (res.ok) router.push("/ver-inmueble");
+    else alert("Error al guardar el inmueble");
   };
 
   return (
-    <div style={{ display: "flex", justifyContent: "center", padding: "2rem" }}>
-      <form
-        onSubmit={handleSubmit}
-        style={{
-          width: "100%",
-          maxWidth: "600px",
-          height: "80vh",
-          overflowY: "auto",
-          backgroundColor: "#fff",
-          padding: "2rem",
-          borderRadius: "10px",
-          boxShadow: "0 4px 12px rgba(0,0,0,0.1)",
-          display: "flex",
-          flexDirection: "column",
-          gap: "1rem",
-        }}
-      >
-        <h2 style={{
-  textAlign: "center",
-  fontFamily: "'Cal Sans', sans-serif",
-  marginBottom: "1rem"
-}}>
-  Datos del Inmueble
-</h2>
+    <div className={styles.formContainer}>
+      <form onSubmit={handleSubmit} className={styles.formBox}>
+        <h2>Datos del Inmueble</h2>
 
+        <input name="titulo" className={styles.input} placeholder="Título" onChange={handleChange} required />
+        <textarea name="descripcion" className={styles.textarea} placeholder="Descripción" onChange={handleChange} required />
+        <input name="precio" type="number" className={styles.input} placeholder="Precio" onChange={handleChange} required />
+        <input name="direccion" className={styles.input} placeholder="Dirección" onChange={handleChange} required />
+        <input name="ciudad" className={styles.input} placeholder="Ciudad" onChange={handleChange} required />
+        <input name="codigo_postal" className={styles.input} placeholder="Código Postal" onChange={handleChange} required />
 
-        <input name="titulo" placeholder="Título" onChange={handleChange} required />
-        <textarea
-  name="descripcion"
-  placeholder="Descripción"
-  onChange={handleChange}
-  required
-  style={{
-    width: "100%",
-    minHeight: "100px", // Aquí el cambio importante
-    padding: "12px",
-    border: "1px solid #ccc",
-    borderRadius: "6px",
-    fontSize: "16px",
-    boxSizing: "border-box"
-  }}
-/>
+        <select name="tipo_inmueble" className={styles.select} onChange={handleChange} required>
+          <option value="">Tipo de Inmueble</option>
+          {tiposInmueble.map((tipo) => (
+            <option key={tipo.id} value={tipo.id}>{tipo.nombre}</option>
+          ))}
+        </select>
 
+        <input name="estatus" className={styles.input} placeholder="Estatus" onChange={handleChange} required />
+        <input name="superficie_terreno" type="number" className={styles.input} placeholder="Superficie del terreno (m²)" onChange={handleChange} />
+        <input name="superficie_construida" type="number" className={styles.input} placeholder="Superficie construida (m²)" onChange={handleChange} />
+        <input name="antiguedad" type="number" className={styles.input} placeholder="Antigüedad (años)" onChange={handleChange} />
+        <input name="niveles" type="number" className={styles.input} placeholder="Niveles / Pisos" onChange={handleChange} />
+        <input name="recamaras" type="number" className={styles.input} placeholder="Número de recámaras" onChange={handleChange} />
+        <input name="banos_completos" type="number" className={styles.input} placeholder="Baños completos" onChange={handleChange} />
+        <input name="medios_banos" type="number" className={styles.input} placeholder="Medios baños" onChange={handleChange} />
+        <input name="estacionamientos" type="number" className={styles.input} placeholder="Estacionamientos" onChange={handleChange} />
 
-        <input name="precio" type="number" placeholder="Precio" onChange={handleChange} required />
-        <input name="direccion" placeholder="Dirección" onChange={handleChange} required />
-        <input name="ciudad" placeholder="Ciudad" onChange={handleChange} required />
-        <input name="codigo_postal" placeholder="Código Postal" onChange={handleChange} required />
+        <input type="file" multiple className={styles.file} onChange={(e) => setImagenes(e.target.files)} />
 
-        <select
-  name="tipo_inmueble"
-  onChange={handleChange}
-  required
-  style={{
-    width: "100%",
-    padding: "12px",
-    border: "1px solid #ccc",
-    borderRadius: "6px",
-    fontSize: "16px",
-    boxSizing: "border-box"
-  }}
->
-  <option value="">Tipo de Inmueble</option>
-  {tiposInmueble.map((tipo) => (
-    <option key={tipo.id} value={tipo.id}>
-      {tipo.nombre}
-    </option>
-  ))}
-</select>
-
-
-        <input name="estatus" placeholder="Estatus" onChange={handleChange} required />
-        <input name="superficie_terreno" type="number" placeholder="Superficie del terreno (m²)" onChange={handleChange} />
-        <input name="superficie_construida" type="number" placeholder="Superficie construida (m²)" onChange={handleChange} />
-        <input name="antiguedad" type="number" placeholder="Antigüedad (años)" onChange={handleChange} />
-        <input name="niveles" type="number" placeholder="Niveles / Pisos" onChange={handleChange} />
-        <input name="recamaras" type="number" placeholder="Número de recámaras" onChange={handleChange} />
-        <input name="banos_completos" type="number" placeholder="Baños completos" onChange={handleChange} />
-        <input name="medios_banos" type="number" placeholder="Medios baños" onChange={handleChange} />
-        <input name="estacionamientos" type="number" placeholder="Estacionamientos" onChange={handleChange} />
-
-        <input type="file" multiple onChange={(e) => setImagenes(e.target.files)} />
-
-        <button
-          type="submit"
-          style={{
-            backgroundColor: "#4f46e5",
-            color: "#fff",
-            padding: "0.75rem",
-            border: "none",
-            borderRadius: "8px",
-            cursor: "pointer",
-            fontWeight: "bold",
-          }}
-        >
-          Guardar Inmueble
-        </button>
+        <button type="submit" className={styles.submitButton}>Guardar Inmueble</button>
       </form>
     </div>
   );
 };
 
 export default FormularioInmueble;
+
 
 
 

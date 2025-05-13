@@ -9,6 +9,7 @@ const NavbarGeneral = () => {
     "/publicar-inmueble": "Publicar",
     "/contactanos": "Contacto",
     "/perfil": "Perfil",
+    "/tus-inmuebles": "Tus Inmuebles"
   };
 
   const title = routeTitles[router.pathname] || "";

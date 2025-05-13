@@ -1,5 +1,6 @@
 import Link from "next/link";
 import { useEffect, useState } from "react";
+import styles from "../styles/verInmueble.module.css";
 
 const VerInmueble = () => {
   const [inmuebles, setInmuebles] = useState([]);
@@ -40,10 +41,9 @@ const VerInmueble = () => {
         backgroundAttachment: "fixed",
         minHeight: "100vh",
         position: "relative",
-        paddingTop: "100px", // <- esto evita que se oculte el contenido bajo el navbar
+        paddingTop: "100px",
       }}
     >
-      {/* Fondo borroso superpuesto */}
       <div
         style={{
           backdropFilter: "blur(6px)",
@@ -56,44 +56,31 @@ const VerInmueble = () => {
           zIndex: 0,
         }}
       />
-
-      <div style={{ position: "relative", zIndex: 1, padding: "2rem" }}>
-        {inmuebles.length > 0 ? (
-          <div className="inmuebles-container">
-            {inmuebles.map((inmueble) => (
-  <Link key={inmueble.id} href={`/inmueble/${inmueble.id}`} legacyBehavior>
-  <a className="inmueble-card">
-    {inmueble.imagenes?.length > 0 && (
-      <img
-        src={`http://localhost:3000${inmueble.imagenes[0]}`}
-        alt="Imagen principal"
-        style={{ width: "100%", borderRadius: "8px", objectFit: "cover" }}
-      />
-    )}
-    <h2>{inmueble.titulo}</h2>
-    <p className="price">Precio: ${parseFloat(inmueble.precio).toLocaleString()}</p>
-    <p><strong>Ciudad:</strong> {inmueble.ciudad}</p>
-    <p className="status"><strong>{inmueble.estatus}</strong></p>
-  </a>
-</Link>
-
-))}
-
-          </div>
-        ) : (
-          <p className="info">No hay inmuebles disponibles.</p>
-        )}
+      <div className={styles.container}>
+        <div className={styles.inmueblesGrid}>
+          {inmuebles.map((inmueble) => (
+            <Link key={inmueble.id} href={`/inmueble/${inmueble.id}`} legacyBehavior>
+              <a className={styles.card}>
+                {inmueble.imagenes?.length > 0 && (
+                  <img
+                    src={`http://localhost:3000${inmueble.imagenes[0]}`}
+                    alt="Imagen del inmueble"
+                    className={styles.image}
+                  />
+                )}
+                <div className={styles.content}>
+                  <h2 className={styles.title}>{inmueble.titulo}</h2>
+                  <p className={styles.price}>${parseFloat(inmueble.precio).toLocaleString()}</p>
+                  <p className={styles.ciudad}><strong>Ciudad:</strong> {inmueble.ciudad}</p>
+                  <p className={styles.status}>{inmueble.estatus}</p>
+                </div>
+              </a>
+            </Link>
+          ))}
+        </div>
       </div>
     </div>
   );
 };
 
 export default VerInmueble;
-
-
-
-
-
-
-
-

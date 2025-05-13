@@ -1,0 +1,90 @@
+.container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 3rem 1rem;
+    font-family: 'Cal Sans', sans-serif;
+    padding-top: 6rem;
+  }
+  
+  .card {
+    background-color: white;
+    padding: 2rem;
+    border-radius: 12px;
+    box-shadow: 0 6px 16px rgba(0, 0, 0, 0.1);
+    text-align: center;
+    width: 100%;
+    max-width: 420px;
+    margin-bottom: 2rem;
+  }
+  
+  .title {
+    font-size: 1.3rem;
+    font-weight: 700;
+    margin-bottom: 0.4rem;
+  }
+  
+  .subtext {
+    color: #6b7280;
+    margin-bottom: 1.2rem;
+    font-size: 0.95rem;
+  }
+  
+  .infoText {
+    margin: 0.3rem 0;
+    font-size: 1rem;
+  }
+  
+  .primaryButton {
+    background-color: #3b82f6;
+    color: white;
+    border: none;
+    padding: 0.6rem 1.2rem;
+    border-radius: 8px;
+    cursor: pointer;
+    font-family: 'Cal Sans', sans-serif;
+    transition: all 0.3s ease;
+    font-weight: 500;
+  }
+  
+  .primaryButton:hover {
+    transform: scale(1.06);
+    box-shadow: 0 6px 14px rgba(59, 130, 246, 0.4);
+  }
+  
+  .secondaryContainer {
+    display: flex;
+    gap: 1.2rem;
+    justify-content: center;
+  }
+  
+  .secondaryButton {
+    padding: 0.6rem 1.3rem;
+    border: none;
+    border-radius: 8px;
+    font-family: 'Cal Sans', sans-serif;
+    font-weight: 500;
+    cursor: pointer;
+    transition: transform 0.3s ease;
+  }
+  
+  .secondaryButton:hover {
+    transform: scale(1.05);
+  }
+  
+  .verOcultos {
+    background-color: #10B981;
+    color: white;
+  }
+  
+  .verPublicados {
+    background-color: #3B82F6;
+    color: white;
+  }
+  .infoText {
+    margin-bottom: 0.7rem; /* espaciado más generoso */
+    font-size: 1rem;
+    line-height: 1.5; /* mejora legibilidad */
+    font-family: 'Cal Sans', sans-serif;
+  }
+   
