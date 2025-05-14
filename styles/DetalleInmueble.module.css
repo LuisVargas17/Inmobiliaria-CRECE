@@ -1,0 +1,128 @@
+.container {
+    padding: 2rem;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+  }
+  
+  .card {
+    background-color: #fff;
+    padding: 2rem;
+    border-radius: 15px;
+    max-width: 700px;
+    width: 100%;
+    box-shadow: 0 10px 25px rgba(0,0,0,0.1);
+  }
+  
+  .titulo {
+    text-align: center;
+    color: #000;
+    font-size: 2rem;
+    font-family: 'Cal Sans', sans-serif;
+    font-weight: 500;
+    margin-bottom: 1.5rem;
+  }
+  
+  .formGrid {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 1rem;
+  }
+  
+  .inputGroup label {
+    font-weight: 500;
+    margin-bottom: 0.25rem;
+    display: block;
+    font-family: 'Cal Sans', sans-serif;
+  }
+  
+  .inputGroup input {
+    padding: 0.5rem;
+    width: 100%;
+    border: 1px solid #ccc;
+    border-radius: 6px;
+  }
+  
+  .checkboxGroup {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    font-family: 'Cal Sans', sans-serif;
+  }
+  
+  .guardarBtn {
+    background-color: #10B981;
+    color: #fff;
+    padding: 0.6rem 1.5rem;
+    font-weight: bold;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    font-family: 'Cal Sans', sans-serif;
+    transition: transform 0.2s ease, background-color 0.3s;
+  }
+  
+  .guardarBtn:hover {
+    transform: scale(1.03);
+    background-color: #059669;
+  }
+  
+  .detalles p {
+    margin-bottom: 0.4rem;
+    font-family: 'Cal Sans', sans-serif;
+  }
+  
+  .editarBtn {
+    background-color: #3B82F6;
+    color: #fff;
+    padding: 0.6rem 1.2rem;
+    margin-top: 1rem;
+    font-weight: bold;
+    border-radius: 8px;
+    border: none;
+    cursor: pointer;
+    font-family: 'Cal Sans', sans-serif;
+    transition: transform 0.2s ease, background-color 0.3s;
+  }
+  
+  .editarBtn:hover {
+    transform: scale(1.03);
+    background-color: #2563EB;
+  }
+  
+  .whatsappBtn {
+    background-color: #25D366;
+    color: white;
+    font-weight: bold;
+    border-radius: 8px;
+    padding: 0.6rem 1.2rem;
+    text-decoration: none;
+    display: inline-block;
+    margin-top: 0.8rem;
+    font-family: 'Cal Sans', sans-serif;
+    transition: transform 0.2s ease;
+  }
+  
+  .whatsappBtn:hover {
+    transform: scale(1.03);
+  }
+  
+  .imagenes {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 1rem;
+    margin-top: 2rem;
+  }
+  
+  .imagenes img {
+    width: 220px;
+    border-radius: 10px;
+    box-shadow: 0 4px 8px rgba(0,0,0,0.2);
+    transition: transform 0.3s ease;
+  }
+  
+  .imagenes img:hover {
+    transform: scale(1.05);
+  }
+  

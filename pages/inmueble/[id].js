@@ -1,5 +1,6 @@
 import { useRouter } from "next/router";
 import { useEffect, useState } from "react";
+import styles from "../../styles/DetalleInmueble.module.css";
 
 const DetalleInmueble = () => {
   const { id } = useRouter().query;
@@ -54,43 +55,43 @@ const DetalleInmueble = () => {
     }
   };
 
-  if (!inmueble) return <p style={{ textAlign: "center", marginTop: "2rem" }}>Cargando...</p>;
+  if (!inmueble)
+    return <p style={{ textAlign: "center", marginTop: "2rem" }}>Cargando...</p>;
 
   return (
-    <div style={{ padding: "2rem", display: "flex", flexDirection: "column", alignItems: "center" }}>
-      <div style={{
-        backgroundColor: "#fff",
-        padding: "2rem",
-        borderRadius: "15px",
-        maxWidth: "700px",
-        width: "100%",
-        boxShadow: "0 10px 25px rgba(0,0,0,0.1)",
-      }}>
-        <h1 style={{
-          textAlign: "center",
-          color: "#000000",
-          fontSize: "2rem",
-          fontFamily: "'Cal Sans', sans-serif",
-          fontWeight: '500',
-          marginBottom: "1rem"
-        }}>{inmueble.titulo}</h1>
+    <div className={styles.container}>
+      <div className={styles.card}>
+        <h1 className={styles.titulo}>{inmueble.titulo}</h1>
 
         {editando ? (
-          <div style={{ display: "grid", gap: "1rem" }}>
-            {[
-              "descripcion", "precio", "direccion", "ciudad", "codigo_postal",
-              "superficie_terreno", "superficie_construida", "antiguedad", "niveles",
-              "recamaras", "banos_completos", "medios_banos", "estacionamientos"
-            ].map((campo) => (
-              <input
-                key={campo}
-                name={campo}
-                value={inmueble[campo]}
-                onChange={handleChange}
-                placeholder={campo.replaceAll("_", " ")}
-              />
+          <div className={styles.formGrid}>
+            {[ 
+              { name: "descripcion", label: "Descripción" },
+              { name: "precio", label: "Precio", type: "number" },
+              { name: "direccion", label: "Dirección" },
+              { name: "ciudad", label: "Ciudad" },
+              { name: "codigo_postal", label: "Código Postal" },
+              { name: "superficie_terreno", label: "Terreno (m²)", type: "number" },
+              { name: "superficie_construida", label: "Construcción (m²)", type: "number" },
+              { name: "antiguedad", label: "Antigüedad", type: "number" },
+              { name: "niveles", label: "Niveles", type: "number" },
+              { name: "recamaras", label: "Recámaras", type: "number" },
+              { name: "banos_completos", label: "Baños", type: "number" },
+              { name: "medios_banos", label: "Medios Baños", type: "number" },
+              { name: "estacionamientos", label: "Estacionamientos", type: "number" },
+            ].map(({ name, label, type = "text" }) => (
+              <div key={name} className={styles.inputGroup}>
+                <label>{label}</label>
+                <input
+                  type={type}
+                  name={name}
+                  value={inmueble[name]}
+                  onChange={handleChange}
+                />
+              </div>
             ))}
-            <label>
+
+            <label className={styles.checkboxGroup}>
               <input
                 type="checkbox"
                 name="amueblado"
@@ -98,17 +99,11 @@ const DetalleInmueble = () => {
                 onChange={handleChange}
               /> Amueblado
             </label>
-            <button onClick={guardarCambios} style={{
-              backgroundColor: "#4CAF50",
-              color: "white",
-              border: "none",
-              padding: "10px",
-              borderRadius: "6px",
-              cursor: "pointer"
-            }}>Guardar</button>
+
+            <button className={styles.guardarBtn} onClick={guardarCambios}>Guardar cambios</button>
           </div>
         ) : (
-          <div style={{ lineHeight: "1.8" }}>
+          <div className={styles.detalles}>
             <p><strong>Descripción:</strong> {inmueble.descripcion}</p>
             <p><strong>Precio:</strong> ${inmueble.precio}</p>
             <p><strong>Dirección:</strong> {inmueble.direccion}</p>
@@ -129,62 +124,28 @@ const DetalleInmueble = () => {
             </p>
 
             <a
-  href={`https://wa.me/52${inmueble.telefono_usuario.replace(/\D/g, '')}?text=${encodeURIComponent("Hola, vi tu propiedad en CRECE y me gustaría recibir más información.")}`}
-  target="_blank"
-  rel="noopener noreferrer"
-  style={{
-    display: "inline-block",
-    marginTop: "0.8rem",
-    backgroundColor: "#25D366",
-    color: "#fff",
-    padding: "0.6rem 1.2rem",
-    fontSize: "0.95rem",
-    borderRadius: "8px",
-    fontWeight: "bold",
-    textDecoration: "none"
-  }}
->
-  Contactar por WhatsApp
-</a>
-
+              href={`https://wa.me/52${inmueble.telefono_usuario.replace(/\D/g, '')}?text=${encodeURIComponent("Hola, vi tu propiedad en CRECE y me gustaría recibir más información.")}`}
+              target="_blank"
+              rel="noopener noreferrer"
+              className={styles.whatsappBtn}
+            >
+              Contactar por WhatsApp
+            </a>
 
             {usuarioActual?.id === inmueble.usuario_id && (
-              <button onClick={() => setEditando(true)} style={{
-                marginTop: "1rem",
-                backgroundColor: "#10B981",
-                color: "white",
-                padding: "10px 20px",
-                borderRadius: "8px",
-                border: "none",
-                cursor: "pointer"
-              }}>Editar</button>
+              <button className={styles.editarBtn} onClick={() => setEditando(true)}>Editar</button>
             )}
           </div>
         )}
       </div>
 
       {inmueble.imagenes?.length > 0 && (
-        <div style={{
-          display: "flex",
-          flexWrap: "wrap",
-          justifyContent: "center",
-          gap: "1rem",
-          marginTop: "2rem"
-        }}>
+        <div className={styles.imagenes}>
           {inmueble.imagenes.map((url, i) => (
             <img
               key={i}
               src={`http://localhost:3000${url}`}
               alt={`Imagen ${i + 1}`}
-              style={{
-                width: "220px",
-                height: "auto",
-                borderRadius: "10px",
-                boxShadow: "0 4px 8px rgba(0,0,0,0.2)",
-                transition: "transform 0.3s ease",
-              }}
-              onMouseEnter={e => e.currentTarget.style.transform = 'scale(1.05)'}
-              onMouseLeave={e => e.currentTarget.style.transform = 'scale(1)'}
             />
           ))}
         </div>
@@ -194,3 +155,4 @@ const DetalleInmueble = () => {
 };
 
 export default DetalleInmueble;
+
